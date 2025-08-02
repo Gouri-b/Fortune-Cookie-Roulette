@@ -48,47 +48,16 @@ For Software:
 # Screenshots (Add at least 3)
 ![Screenshot1](https://github.com/Gouri-b/Fortune-Cookie-Roulette/blob/main/Screenshot%202025-08-02%20063708.png)
 
-![Screenshot2]()
-*Add caption explaining what this shows*
+![Screenshot2](https://github.com/Gouri-b/Fortune-Cookie-Roulette/blob/main/Screenshot%202025-08-02%20063917.png)
 
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
+![Screenshot3](https://github.com/Gouri-b/Fortune-Cookie-Roulette/blob/main/Screenshot%202025-08-02%20063708.png)
 
 # Diagrams
-![Workflow](Add your workflow/architecture diagram here)
-*Add caption explaining your workflow*
-
-For Hardware:
-
-# Schematic & Circuit
-![Circuit](Add your circuit diagram here)
-*Add caption explaining connections*
-
-![Schematic](Add your schematic diagram here)
-*Add caption explaining the schematic*
-
-# Build Photos
-![Components](Add photo of your components here)
-*List out all components shown*
-
-![Build](Add photos of build process here)
-*Explain the build steps*
-
-![Final](Add photo of final product here)
-*Explain the final build*
-
-### Project Demo
-# Video
-[Add your demo video link here]
-*Explain what the video demonstrates*
-
-# Additional Demos
-[Add any extra demo materials/links]
+User flow: Click cookie → Animation → Random message → Laughter or existential crisis.
 
 ## Team Contributions
-- [Name 1]: [Specific contributions]
-- [Name 2]: [Specific contributions]
-- [Name 3]: [Specific contributions]
+- Rena Sayam K : Idea, UI/UX design, cookie-crack logic in JS
+- Gouri B : Deployment, background effects, video demo
 
 ---
 Made with ❤️ at TinkerHub Useless Projects 
