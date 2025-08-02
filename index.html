@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune Cookie Roulette - Crack Your Destiny!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        .container {
+            min-height: 100vh;
+            position: relative;
+            background: black;
+            overflow: hidden;
+        }
+
+        /* Animated Background */
+        .background {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #581c87, #1e3a8a, #312e81);
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f472b6, #a855f7);
+            opacity: 0.2;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -30px) scale(0.8); }
+            50% { transform: translate(-30px, 50px) scale(1.2); }
+            75% { transform: translate(30px, 30px) scale(0.9); }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 4s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .gradient-overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0.3;
+            background: radial-gradient(circle at 20% 50%, #ff6b6b 0%, transparent 50%);
+            animation: gradientShift 8s infinite ease-in-out;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background: radial-gradient(circle at 20% 50%, #ff6b6b 0%, transparent 50%); }
+            33% { background: radial-gradient(circle at 80% 20%, #4ecdc4 0%, transparent 50%); }
+            66% { background: radial-gradient(circle at 40% 80%, #45b7d1 0%, transparent 50%); }
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .content-wrapper {
+            text-align: center;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* Title */
+        .title-section {
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(-50px);
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: bold;
+            background: linear-gradient(45deg, #fbbf24, #f472b6, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .sub-title {
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: bold;
+            background: linear-gradient(45deg, #a855f7, #3b82f6, #06b6d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .description {
+            font-size: 1.25rem;
+            color: #d1d5db;
+            margin-top: 1.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Cookie Container */
+        .cookie-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 500px;
+        }
+
+        .cookie-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .cookie-wrapper:hover {
+            transform: scale(1.15);
+            animation: wiggle 0.5s ease-in-out;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: scale(1.15) rotate(0deg); }
+            25% { transform: scale(1.15) rotate(-2deg); }
+            75% { transform: scale(1.15) rotate(2deg); }
+        }
+
+        .cookie-shadow {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            filter: blur(20px);
+            transform: translateY(2rem) scale(1.2);
+            border-radius: 50%;
+        }
+
+        .cookie {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at 30% 30%, #f4a460, #daa520, #cd853f, #d2691e, #b8860b);
+            border-radius: 50%;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                inset 0 6px 12px rgba(255, 255, 255, 0.1),
+                inset 0 -6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .cookie-inner {
+            position: absolute;
+            inset: 12px;
+            background: radial-gradient(circle at 40% 40%, #f4a460, #daa520, #cd853f);
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+
+        .cookie-texture {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.3) 2px, transparent 2px),
+                radial-gradient(circle at 75% 35%, rgba(139, 69, 19, 0.4) 1px, transparent 1px),
+                radial-gradient(circle at 45% 70%, rgba(139, 69, 19, 0.3) 1.5px, transparent 1.5px),
+                radial-gradient(circle at 65% 80%, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+                radial-gradient(circle at 20% 60%, rgba(139, 69, 19, 0.5) 2px, transparent 2px);
+            background-size: 60px 60px, 45px 45px, 70px 70px, 55px 55px, 80px 80px;
+        }
+
+        .cookie-highlight {
+            position: absolute;
+            top: 35px;
+            left: 50px;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+
+        .cookie-cracks {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+        }
+
+        .crack {
+            position: absolute;
+            background: #8b4513;
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+
+        .crack1 {
+            top: 30%;
+            left: 20%;
+            width: 60px;
+            height: 2px;
+            transform: rotate(25deg);
+        }
+
+        .crack2 {
+            top: 60%;
+            right: 25%;
+            width: 45px;
+            height: 2px;
+            transform: rotate(-15deg);
+        }
+
+        .crack3 {
+            bottom: 35%;
+            left: 35%;
+            width: 50px;
+            height: 2px;
+            transform: rotate(45deg);
+        }
+
+        .crack4 {
+            top: 45%;
+            left: 60%;
+            width: 35px;
+            height: 2px;
+            transform: rotate(-30deg);
+        }
+
+        .shimmer {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            border-radius: 50%;
+            transform: translateX(-100px);
+            animation: shimmer 5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(100px); }
+        }
+
+        .click-instruction {
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 2rem;
+            font-size: 1.125rem;
+            font-weight: 500;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Cracked Cookie */
+        .cracked-cookie {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        .cookie-half {
+            position: absolute;
+            width: 150px;
+            height: 300px;
+            background: radial-gradient(circle, #d2691e, #8b4513);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .cookie-half.left {
+            left: 0;
+            border-radius: 150px 0 0 150px;
+            animation: crackLeft 1.5s ease-out forwards;
+            transform-origin: right center;
+        }
+
+        .cookie-half.right {
+            right: 0;
+            border-radius: 0 150px 150px 0;
+            animation: crackRight 1.5s ease-out forwards;
+            transform-origin: left center;
+        }
+
+        @keyframes crackLeft {
+            to {
+                transform: translateX(-70px) rotate(-25deg);
+            }
+        }
+
+        @keyframes crackRight {
+            to {
+                transform: translateX(70px) rotate(25deg);
+            }
+        }
+
+        .crack-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 120px;
+            background: #8b4513;
+            transform: translate(-50%, -50%);
+            animation: showCrack 0.5s ease-out;
+        }
+
+        @keyframes showCrack {
+            from { height: 0; }
+            to { height: 120px; }
+        }
+
+        /* Fortune Paper */
+        .fortune-paper {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border: 4px solid #daa520;
+            position: relative;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(50px) scale(0.8);
+            animation: fortuneAppear 0.8s ease-out forwards;
+        }
+
+        @keyframes fortuneAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .paper-texture {
+            position: absolute;
+            inset: 0;
+            opacity: 0.05;
+            background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+
+        .fortune-text {
+            position: relative;
+            z-index: 10;
+            font-size: 1.5rem;
+            font-family: serif;
+            color: #374151;
+            line-height: 1.6;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .fortune-text:active {
+            transform: scale(0.98);
+        }
+
+        .click-instructions {
+            text-align: center;
+            margin-top: 1.5rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        .instruction-text {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 0.5rem;
+            gap: 0.5rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: background-color 0.3s ease;
+        }
+
+        .dot.active {
+            background: #daa520;
+        }
+
+        .revealed-message {
+            text-align: center;
+            margin-top: 1.5rem;
+            opacity: 0;
+            transform: scale(0.9);
+            animation: revealMessage 0.5s ease-out 0.3s forwards;
+        }
+
+        @keyframes revealMessage {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .revealed-title {
+            color: #6b7280;
+            font-weight: 500;
+            font-size: 1.125rem;
+        }
+
+        .revealed-subtitle {
+            color: #9ca3af;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: buttonAppear 0.5s ease-out 0.5s forwards;
+        }
+
+        @keyframes buttonAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            font-weight: bold;
+            font-size: 1.125rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #a855f7, #ec4899);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #06b6d4, #3b82f6);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Nevermind Message */
+        .nevermind-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .nevermind-content {
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, #7c3aed, #ec4899);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            transform: scale(0.8) translateY(20px);
+            animation: nevermindAppear 0.5s ease-out forwards;
+        }
+
+        @keyframes nevermindAppear {
+            to {
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .nevermind-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: bold;
+            color: white;
+            margin-bottom: 1rem;
+            animation: wiggleNevermind 1s ease-in-out;
+        }
+
+        @keyframes wiggleNevermind {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-5deg) scale(1.1); }
+            50% { transform: rotate(0deg) scale(1); }
+            75% { transform: rotate(5deg) scale(1.1); }
+        }
+
+        .nevermind-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Share Message Overlay */
+        .share-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .share-content {
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            transform: scale(0.8) translateY(20px);
+            animation: shareAppear 0.5s ease-out forwards;
+        }
+
+        @keyframes shareAppear {
+            to {
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .share-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: bold;
+            color: white;
+            margin-bottom: 1rem;
+            animation: shakeShare 1s ease-in-out;
+        }
+
+        @keyframes shakeShare {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-3deg) scale(1.05); }
+            50% { transform: rotate(0deg) scale(1.1); }
+            75% { transform: rotate(3deg) scale(1.05); }
+        }
+
+        .share-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .cookie {
+                width: 240px;
+                height: 240px;
+            }
+            
+            .cracked-cookie {
+                width: 240px;
+                height: 240px;
+            }
+            
+            .cookie-half {
+                width: 120px;
+                height: 240px;
+            }
+            
+            .cookie-half.left {
+                border-radius: 120px 0 0 120px;
+            }
+            
+            .cookie-half.right {
+                border-radius: 0 120px 120px 0;
+            }
+            
+            .fortune-paper {
+                padding: 2rem;
+            }
+            
+            .fortune-text {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cookie {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .cracked-cookie {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .cookie-half {
+                width: 100px;
+                height: 200px;
+            }
+            
+            .cookie-half.left {
+                border-radius: 100px 0 0 100px;
+            }
+            
+            .cookie-half.right {
+                border-radius: 0 100px 100px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Animated Background -->
+        <div class="background"></div>
+        <div class="gradient-overlay"></div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="content-wrapper">
+                <!-- Title -->
+                <div class="title-section">
+                    <h1 class="main-title">🍪 Fortune Cookie</h1>
+                    <h2 class="sub-title">Roulette</h2>
+                    <p class="description">
+                        Crack open your destiny... or your sanity. Each fortune is guaranteed to be 100% unhelpful.
+                    </p>
+                </div>
+
+                <!-- Cookie Container -->
+                <div class="cookie-container">
+                    <!-- Initial Cookie -->
+                    <div id="cookie-initial" class="cookie-wrapper">
+                        <div class="cookie-shadow"></div>
+                        <div class="cookie">
+                            <div class="cookie-inner"></div>
+                            <div class="cookie-texture"></div>
+                            <div class="cookie-highlight"></div>
+                            <div class="cookie-cracks">
+                                <div class="crack crack1"></div>
+                                <div class="crack crack2"></div>
+                                <div class="crack crack3"></div>
+                                <div class="crack crack4"></div>
+                            </div>
+                            <div class="shimmer"></div>
+                        </div>
+                        <p class="click-instruction">Click to crack your destiny! 🔮</p>
+                    </div>
+
+                    <!-- Cracked Cookie -->
+                    <div id="cookie-cracked" class="cracked-cookie hidden">
+                        <div class="cookie-half left"></div>
+                        <div class="cookie-half right"></div>
+                        <div class="crack-line"></div>
+                    </div>
+
+                    <!-- Fortune Paper -->
+                    <div id="fortune-paper" class="fortune-paper hidden">
+                        <div class="paper-texture"></div>
+                        <div id="fortune-text" class="fortune-text"></div>
+                        
+                        <div id="click-instructions" class="click-instructions">
+                            <p class="instruction-text">🔮 Tap to decode your destiny...</p>
+                            <div class="progress-dots">
+                                <div class="dot" id="dot-0"></div>
+                                <div class="dot" id="dot-1"></div>
+                                <div class="dot" id="dot-2"></div>
+                            </div>
+                        </div>
+
+                        <div id="revealed-message" class="revealed-message hidden">
+                            <p class="revealed-title">🎭 Your destiny has been revealed!</p>
+                            <p class="revealed-subtitle">Will you tempt fate again?</p>
+                        </div>
+
+                        <div id="button-container" class="button-container hidden">
+                            <button id="crack-another" class="btn btn-primary">
+                                Crack Another Cookie! 🍪
+                            </button>
+                            <br>
+                            <button id="share-fortune" class="btn btn-secondary">
+                                Share Fortune ✨
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nevermind Overlay -->
+        <div id="nevermind-overlay" class="nevermind-overlay hidden">
+            <div class="nevermind-content">
+                <h2 class="nevermind-title">Nah nevermind..! 😅</h2>
+                <p class="nevermind-subtitle">Just kidding, here we go again!</p>
+            </div>
+        </div>
+
+        <!-- Share Message Overlay -->
+        <div id="share-overlay" class="share-overlay hidden">
+            <div class="share-content">
+                <h2 class="share-title">Don't bother, just leave! 😤</h2>
+                <p class="share-subtitle">Nobody wants to hear about your fortune anyway!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fortune data
+        const fortunes = [
+            "Your future contains 73% more existential dread than the recommended daily allowance.",
+            "A houseplant will judge your life choices more accurately than your therapist.",
+            "You will discover that your greatest enemy has been your own WiFi router all along.",
+            "Tomorrow, you'll have a philosophical breakdown in the cereal aisle.",
+            "Your socks will achieve consciousness, but they'll be disappointed in you.",
+            "A rubber duck will provide better life advice than your college degree.",
+            "You will become internet famous for something you did while half-asleep.",
+            "Your coffee will taste like broken dreams, but somehow that's an improvement.",
+            "A pigeon will deliver life-changing news, but you won't speak fluent pigeon.",
+            "You'll find true love in the produce section, but it will be with a really good avocado.",
+            "Your future self will write you a strongly worded Yelp review.",
+            "You will invent a new dance move while trying to avoid stepping on a LEGO.",
+            "A fortune cookie will lie to you today. (Spoiler: it's this one.)",
+            "Your destiny involves an unreasonable amount of bubble wrap and regret.",
+            "You will have a heated argument with a self-checkout machine and lose spectacularly.",
+            "Your life will be narrated by someone with a really annoying voice.",
+            "You'll discover that your houseplants have been gossiping about you on PlantTok.",
+            "A vending machine will become your most reliable relationship.",
+            "You will achieve enlightenment, but only while stuck in traffic.",
+            "Your greatest accomplishment will be perfectly timing a microwave beep."
+        ];
+
+        // Game state
+        let gameState = 'cookie'; // 'cookie', 'cracked', 'fortune'
+        let currentFortune = '';
+        let displayText = '';
+        let clickCount = 0;
+        let isRevealed = false;
+
+        // DOM elements
+        const cookieInitial = document.getElementById('cookie-initial');
+        const cookieCracked = document.getElementById('cookie-cracked');
+        const fortunePaper = document.getElementById('fortune-paper');
+        const fortuneText = document.getElementById('fortune-text');
+        const clickInstructions = document.getElementById('click-instructions');
+        const revealedMessage = document.getElementById('revealed-message');
+        const buttonContainer = document.getElementById('button-container');
+        const crackAnotherBtn = document.getElementById('crack-another');
+        const shareFortuneBtn = document.getElementById('share-fortune');
+        const nevermindOverlay = document.getElementById('nevermind-overlay');
+        const shareOverlay = document.getElementById('share-overlay');
+
+        // Utility functions
+        function mirrorText(text) {
+            return text
+                .split('')
+                .reverse()
+                .join('')
+                .replace(/[a-zA-Z]/g, (char) => {
+                    const start = char <= 'Z' ? 65 : 97;
+                    return String.fromCharCode(start + (25 - (char.charCodeAt(0) - start)));
+                });
+        }
+
+        function scrambleText(text) {
+            return text.replace(/[a-zA-Z]/g, (char) => {
+                const isUpper = char === char.toUpperCase();
+                const randomChar = String.fromCharCode(Math.floor(Math.random() * 26) + (isUpper ? 65 : 97));
+                return randomChar;
+            });
+        }
+
+        function selectRandomFortune() {
+            currentFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+            displayText = mirrorText(currentFortune);
+            clickCount = 0;
+            isRevealed = false;
+        }
+
+        function updateProgressDots() {
+            for (let i = 0; i <= 2; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                if (i <= clickCount) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            }
+        }
+
+        function updateInstructionText() {
+            const instructionText = document.querySelector('.instruction-text');
+            if (clickCount === 0) {
+                instructionText.textContent = '🔮 Tap to decode your destiny...';
+            } else if (clickCount === 1) {
+                instructionText.textContent = '✨ Tap again to reveal more...';
+            } else if (clickCount === 2) {
+                instructionText.textContent = '🎭 One more tap for the truth!';
+            }
+        }
+
+        // Main functions
+        function crackCookie() {
+            if (gameState !== 'cookie') return;
+
+            selectRandomFortune();
+            gameState = 'cracked';
+
+            // Hide initial cookie, show cracked cookie
+            cookieInitial.classList.add('hidden');
+            cookieCracked.classList.remove('hidden');
+
+            // After crack animation, show fortune
+            setTimeout(() => {
+                cookieCracked.classList.add('hidden');
+                fortunePaper.classList.remove('hidden');
+                fortuneText.textContent = displayText;
+                gameState = 'fortune';
+            }, 1500);
+        }
+
+        function handleFortuneClick() {
+            if (isRevealed) return;
+
+            clickCount++;
+
+            if (clickCount === 1) {
+                displayText = scrambleText(currentFortune);
+            } else if (clickCount === 2) {
+                const words = currentFortune.split(' ');
+                displayText = words
+                    .map((word, index) => index % 2 === 0 ? word : word.replace(/[a-zA-Z]/g, '•'))
+                    .join(' ');
+            } else if (clickCount === 3) {
+                displayText = currentFortune;
+                isRevealed = true;
+                clickInstructions.classList.add('hidden');
+                revealedMessage.classList.remove('hidden');
+                buttonContainer.classList.remove('hidden');
+            }
+
+            fortuneText.textContent = displayText;
+            updateProgressDots();
+            updateInstructionText();
+        }
+
+        function handleCrackAnother() {
+            // Show nevermind message
+            nevermindOverlay.classList.remove('hidden');
+
+            // After 2 seconds, hide message and reset
+            setTimeout(() => {
+                nevermindOverlay.classList.add('hidden');
+                resetGame();
+            }, 2000);
+        }
+
+        function handleShareFortune() {
+            // Show the sarcastic share message
+            shareOverlay.classList.remove('hidden');
+
+            // After 2 seconds, hide the message
+            setTimeout(() => {
+                shareOverlay.classList.add('hidden');
+            }, 2000);
+        }
+
+        function resetGame() {
+            gameState = 'cookie';
+            clickCount = 0;
+            isRevealed = false;
+            currentFortune = '';
+            displayText = '';
+
+            // Reset UI
+            cookieInitial.classList.remove('hidden');
+            cookieCracked.classList.add('hidden');
+            fortunePaper.classList.add('hidden');
+            clickInstructions.classList.remove('hidden');
+            revealedMessage.classList.add('hidden');
+            buttonContainer.classList.add('hidden');
+
+            // Reset progress dots
+            updateProgressDots();
+        }
+
+        // Create floating orbs and sparkles
+        function createFloatingOrbs() {
+            const container = document.querySelector('.background');
+            
+            for (let i = 0; i < 15; i++) {
+                const orb = document.createElement('div');
+                orb.className = 'floating-orb';
+                orb.style.width = Math.random() * 100 + 50 + 'px';
+                orb.style.height = orb.style.width;
+                orb.style.left = Math.random() * 100 + '%';
+                orb.style.top = Math.random() * 100 + '%';
+                orb.style.animationDelay = Math.random() * 10 + 's';
+                orb.style.animationDuration = Math.random() * 10 + 10 + 's';
+                container.appendChild(orb);
+            }
+
+            for (let i = 0; i < 30; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animationDelay = Math.random() * 5 + 's';
+                sparkle.style.animationDuration = Math.random() * 3 + 2 + 's';
+                container.appendChild(sparkle);
+            }
+        }
+
+        // Event listeners
+        cookieInitial.addEventListener('click', crackCookie);
+        fortuneText.addEventListener('click', handleFortuneClick);
+        crackAnotherBtn.addEventListener('click', handleCrackAnother);
+        shareFortuneBtn.addEventListener('click', handleShareFortune);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createFloatingOrbs();
+            updateProgressDots();
+        });
+    </script>
+</body>
+</html>
