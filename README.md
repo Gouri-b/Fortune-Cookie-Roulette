@@ -46,10 +46,9 @@ cd fortune-cookie-roulette
 For Software:
 
 # Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
+![Screenshot1](https://github.com/Gouri-b/Fortune-Cookie-Roulette/blob/main/Screenshot%202025-08-02%20063708.png)
 
-![Screenshot2](Add screenshot 2 here with proper name)
+![Screenshot2]()
 *Add caption explaining what this shows*
 
 ![Screenshot3](Add screenshot 3 here with proper name)
